@@ -1,5 +1,8 @@
 # chat_app
 
+![image](https://github.com/zaka1200/chat_app/assets/121964432/8a259197-84ec-41a4-926d-442913aa5da8)
+
+
 # Introduction :
 
 Ce rapport examine deux codes qui constituent une application de chat en Java. Les codes, ChatServer et ChatClient, mettent en œuvre un système de chat basé sur des sockets TCP et une interface graphique Swing. Le ChatServer est responsable de la gestion des connexions des clients, de la diffusion des messages et de la gestion des déconnexions. Le ChatClient permet aux utilisateurs de se connecter au serveur, d'envoyer des messages et de recevoir des messages des autres utilisateurs connectés. Nous examinerons en détail chaque code, en expliquant les concepts clés tels que les threads, Swing et les sockets, et nous discuterons également du lien entre les deux codes.
