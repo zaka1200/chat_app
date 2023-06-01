@@ -78,7 +78,7 @@ La méthode `removeClient` supprime un client de la liste des clients lorsque ce
 
 ```java
 public static void main(String[] args) {
-    int port = 12345;
+    int port = 8080;
     ChatServer server = new ChatServer(port);
     server.start();
 }
@@ -121,24 +121,18 @@ public void run() {
     try {
         InputStream input = socket.getInputStream();
         BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-
         OutputStream output = socket.getOutputStream();
         writer = new PrintWriter(output, true);
-
-        // Effectuer l'authentification
         writer.println("Entrez votre nom d'utilisateur :");
         username = reader.readLine();
-
         server.broadcastMessage(username + " a rejoint le chat.", this);
-
         String clientMessage;
         while ((clientMessage = reader.readLine()) != null) {
             server.broadcastMessage(clientMessage, this);
         }
-
         socket.close();
         server.removeClient(this);
-        server.broadcastMessage(username + " a quitté le chat.", this);
+        server.broadcastMessage(username + " a quitté le chat !!", this);
     } catch (IOException e) {
         e.printStackTrace();
     }
@@ -185,7 +179,7 @@ Lorsqu'un utilisateur envoie un message, le client l'envoie au serveur via le `S
        private JTextArea chatArea;
        private JTextField messageField;
        private String username;
-       ...
+       
    }
    ```
 
@@ -221,7 +215,7 @@ Lorsqu'un utilisateur envoie un message, le client l'envoie au serveur via le `S
        chatArea.setEditable(false);
        messageField = new JTextField(40);
        JButton sendButton = new JButton("Send");
-       ...
+       
    }
    ```
 
@@ -248,9 +242,7 @@ Lorsqu'un utilisateur envoie un message, le client l'envoie au serveur via le `S
 7. Méthode `performAuthentication` :
    ```java
    private void performAuthentication() throws IOException {
-       username
-
- = JOptionPane.showInputDialog(null, "Enter your username:");
+       username  = JOptionPane.showInputDialog(null, "Enter your username:");
        writer.println(username);
    }
    ```
@@ -279,8 +271,8 @@ Lorsqu'un utilisateur envoie un message, le client l'envoie au serveur via le `S
 9. Méthode `main` :
    ```java
    public static void main(String[] args) {
-       String serverAddress = "localhost"; // Remplacez par l'adresse de votre serveur
-       int serverPort = 12345; // Remplacez par le port de votre serveur
+       String serverAddress = "localhost";
+       int serverPort = 8080;
        SwingUtilities.invokeLater(() -> new ChatClient(serverAddress, serverPort));
    }
    ```
