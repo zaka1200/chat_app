@@ -133,7 +133,7 @@ public void run() {
         BufferedReader reader = new BufferedReader(new InputStreamReader(input));
         OutputStream output = socket.getOutputStream();
         writer = new PrintWriter(output, true);
-        writer.println("Entrez votre nom d'utilisateur :");
+        writer.println("Welcome to the group chat");
         username = reader.readLine();
         server.broadcastMessage(username + " a rejoint le chat.", this);
         String clientMessage;
@@ -310,6 +310,27 @@ Swing est une bibliothèque graphique en Java qui permet de créer des interface
 Les sockets sont utilisés pour établir une communication réseau entre le serveur et les clients. Le serveur utilise une `ServerSocket` pour écouter les connexions entrantes des clients, tandis que chaque client utilise un `Socket` pour se connecter au serveur. Les sockets permettent aux données d'être envoyées et reçues via le réseau, facilitant ainsi la communication bidirectionnelle entre le serveur et les clients.
 
 # Test 
+
+tout d abord on commence par compiler le code du serveur en utilisons javac 
+
+![image](https://github.com/zaka1200/chat_app/assets/121964432/fa713f82-8f2e-45c3-8163-92b3822d939f)
+ 
+ puis on lance le serveur 
+
+![image](https://github.com/zaka1200/chat_app/assets/121964432/0d43787c-873f-4e01-b14b-db6af564509d)
+ 
+maintenant a partir de deux terminal on lance 2 client :
+
+![image](https://github.com/zaka1200/chat_app/assets/121964432/55092369-b1aa-4615-89a0-49f430f93472)
+
+on s'authentifie :
+
+![image](https://github.com/zaka1200/chat_app/assets/121964432/5e2a2b6e-4da9-405f-a12a-2498f21b99e1) ![image](https://github.com/zaka1200/chat_app/assets/121964432/058f5a6c-7d70-40f8-bbd8-04ff5896bb72)
+
+on teste le chat :
+
+![image](https://github.com/zaka1200/chat_app/assets/121964432/dd5655c2-edd6-4312-bb49-760a0a4f0adb)
+
 
 
 # Consclusion 
