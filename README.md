@@ -295,9 +295,15 @@ Les threads jouent un rôle crucial dans ces deux codes. Dans le `ChatServer`, c
 
 # Swing :
 
+![image](https://github.com/zaka1200/chat_app/assets/121964432/c96bba1e-c927-45fa-9211-639b30e18ffd) ![image](https://github.com/zaka1200/chat_app/assets/121964432/e4fb2558-8a83-491e-b434-47c58805d459)
+
+
 Swing est une bibliothèque graphique en Java qui permet de créer des interfaces graphiques. Dans le `ChatClient`, Swing est utilisé pour créer une fenêtre de chat conviviale avec des composants tels que `JTextArea`, `JTextField` et `JButton`. Swing fournit également des fonctionnalités pour la gestion des événements, telles que l'ajout d'un écouteur d'action au bouton "Envoyer". L'utilisation de Swing facilite la création d'une interface utilisateur interactive et réactive pour le client.
 
 # Sockets :
+
+![image](https://github.com/zaka1200/chat_app/assets/121964432/de8a8f7d-c65c-42bc-a041-370839481f64)
+
 
 Les sockets sont utilisés pour établir une communication réseau entre le serveur et les clients. Le serveur utilise une `ServerSocket` pour écouter les connexions entrantes des clients, tandis que chaque client utilise un `Socket` pour se connecter au serveur. Les sockets permettent aux données d'être envoyées et reçues via le réseau, facilitant ainsi la communication bidirectionnelle entre le serveur et les clients.
 
