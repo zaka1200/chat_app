@@ -7,9 +7,13 @@
 - [Introduction](#introduction)
 - [Serveur](#serveur)
 - [Client](#client)
+- [Threads](#Threads)
+- [Swing](#Swing)
+- [Sockets](#Sockets)
+- [Test](#Test)
 - [Conclusion](#conclusion)
 
-# Introduction :
+# Introduction
 
 Ce rapport examine deux codes qui constituent une application de chat en Java. Les codes, ChatServer et ChatClient, mettent en œuvre un système de chat basé sur des sockets TCP et une interface graphique Swing. Le ChatServer est responsable de la gestion des connexions des clients, de la diffusion des messages et de la gestion des déconnexions. Le ChatClient permet aux utilisateurs de se connecter au serveur, d'envoyer des messages et de recevoir des messages des autres utilisateurs connectés. Nous examinerons en détail chaque code, en expliquant les concepts clés tels que les threads, Swing et les sockets, et nous discuterons également du lien entre les deux codes.
 
@@ -154,7 +158,7 @@ Lorsque le client se déconnecte, la méthode ferme la connexion socket, supprim
 
 En cas d'exception lors de la communication, l'erreur est affichée.
 
-# Client :
+# Client 
 
 #
 
@@ -284,31 +288,31 @@ Lorsqu'un utilisateur envoie un message, le client l'envoie au serveur via le `S
    ```
 
    La méthode `main` est la méthode principale qui est exécutée lorsque le programme est lancé. Elle crée une instance de `ChatClient` en utilisant l'adresse du serveur et le port spécifiés. L'exécution est effectuée sur le thread de l'interface utilisateur en utilisant `SwingUtilities.invokeLater`.
-# Threads :
+# Threads 
 
 ![image](https://github.com/zaka1200/chat_app/assets/121964432/ff0a8f78-c1a8-4288-977f-f418f331c2e9)
 
 
 Les threads jouent un rôle crucial dans ces deux codes. Dans le `ChatServer`, chaque connexion client est gérée par un thread `ClientHandler` distinct. Cela permet au serveur de gérer plusieurs connexions simultanément et de répondre aux messages de chaque client sans bloquer les autres clients. De même, dans le `ChatClient`, un thread distinct est utilisé pour lire les messages du serveur en continu tout en maintenant l'interface utilisateur réactive.
 
-# Swing :
+# Swing 
 
 ![image](https://github.com/zaka1200/chat_app/assets/121964432/c96bba1e-c927-45fa-9211-639b30e18ffd) ![image](https://github.com/zaka1200/chat_app/assets/121964432/e4fb2558-8a83-491e-b434-47c58805d459)
 
 
 Swing est une bibliothèque graphique en Java qui permet de créer des interfaces graphiques. Dans le `ChatClient`, Swing est utilisé pour créer une fenêtre de chat conviviale avec des composants tels que `JTextArea`, `JTextField` et `JButton`. Swing fournit également des fonctionnalités pour la gestion des événements, telles que l'ajout d'un écouteur d'action au bouton "Envoyer". L'utilisation de Swing facilite la création d'une interface utilisateur interactive et réactive pour le client.
 
-# Sockets :
+# Sockets 
 
 ![image](https://github.com/zaka1200/chat_app/assets/121964432/de8a8f7d-c65c-42bc-a041-370839481f64)
 
 
 Les sockets sont utilisés pour établir une communication réseau entre le serveur et les clients. Le serveur utilise une `ServerSocket` pour écouter les connexions entrantes des clients, tandis que chaque client utilise un `Socket` pour se connecter au serveur. Les sockets permettent aux données d'être envoyées et reçues via le réseau, facilitant ainsi la communication bidirectionnelle entre le serveur et les clients.
 
-# Test :
+# Test 
 
 
-# Consclusion :
+# Consclusion 
 
 
 En conclusion, les codes `ChatServer` et `ChatClient` présentent une implémentation basique d'une application de chat en Java. Le `ChatServer` gère les connexions des clients, la diffusion des messages et les déconnexions, tandis que le `ChatClient` permet aux utilisateurs de se connecter au serveur, d'envoyer des messages et de recevoir des messages des autres utilisateurs. Les concepts clés tels que les threads, Swing et les sockets sont utilisés pour réaliser la communication en réseau et l'interface utilisateur graphique. Ces codes peuvent servir de point de départ pour développer des fonctionnalités plus avancées dans une application de chat.
