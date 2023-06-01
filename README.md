@@ -164,210 +164,132 @@ Lorsqu'un utilisateur envoie un message, le client l'envoie au serveur via le `S
 
 #
 
-```java
-import java.io.*;
-import java.net.*;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
 
-public class ChatClient {
-    private Socket socket;
-    private BufferedReader reader;
-    private PrintWriter writer;
-    private JTextArea chatArea;
-    private JTextField messageField;
-    private String username;
-    private Map<String, Color> userColors;
+1. Importations :
+   ```java
+   import java.io.*;
+   import java.net.*;
+   import javax.swing.*;
+   import java.awt.*;
+   import java.awt.event.*;
+   ```
 
-    public ChatClient(String serverAddress, int serverPort) {
-        try {
-            socket = new Socket(serverAddress, serverPort);
-            reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            writer = new PrintWriter(socket.getOutputStream(), true);
-            userColors = new HashMap<>();
-            performAuthentication();
-            createAndShowGUI();
-            startReadingMessages();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-```
+   Les instructions d'importation incluent les bibliothèques nécessaires pour travailler avec les entrées/sorties, les sockets, les composants Swing et les événements AWT.
 
-La classe `ChatClient` représente le côté client de l'application de chat. Elle a plusieurs variables d'instance, notamment `socket` de type `Socket`, `reader` et `writer` de type `BufferedReader` et `PrintWriter` respectivement pour la communication avec le serveur, `chatArea` et `messageField` de type `JTextArea` et `JTextField` respectivement pour l'interface utilisateur graphique (GUI), `username` pour stocker le nom d'utilisateur du client et `userColors` de type `Map<String, Color>` pour stocker les couleurs des utilisateurs.
+2. Déclaration de classe et variables membres :
+   ```java
+   public class ChatClient {
+       private Socket socket;
+       private BufferedReader reader;
+       private PrintWriter writer;
+       private JTextArea chatArea;
+       private JTextField messageField;
+       private String username;
+       ...
+   }
+   ```
 
-Le constructeur `ChatClient` crée une connexion socket vers le serveur spécifié, initialise les flux de lecture et d'écriture, et effectue l'authentification du client en appelant `performAuthentication()`. Ensuite, il crée et affiche l'interface utilisateur graphique en appelant `createAndShowGUI()`, et démarre la lecture des messages du serveur en appelant `startReadingMessages()`.
+   La classe `ChatClient` contient des variables membres pour stocker le socket, le lecteur (`reader`), l'écrivain (`writer`), la zone de chat (`chatArea`), le champ de message (`messageField`) et le nom d'utilisateur (`username`).
 
-```java
-public void createAndShowGUI() {
-    // Définir l'apparence selon le style visuel du système
-    try {
-        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-    } catch (Exception ex) {
-        ex.printStackTrace();
-    }
+3. Constructeur `ChatClient` :
+   ```java
+   public ChatClient(String serverAddress, int serverPort) {
+       try {
+           socket = new Socket(serverAddress, serverPort);
+           reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+           writer = new PrintWriter(socket.getOutputStream(), true);
+           performAuthentication();
+           createAndShowGUI();
+           startReadingMessages();
+       } catch (IOException e) {
+           e.printStackTrace();
+       }
+   }
+   ```
 
-    // Créer les composants de l'interface utilisateur
-    chatArea = new JTextArea(20, 40);
-    chatArea.setEditable(false);
+   Le constructeur `ChatClient` prend en paramètres l'adresse du serveur et le port du serveur. Il initialise le socket en se connectant au serveur, crée les flux d'entrée et de sortie pour la communication avec le serveur, effectue l'authentification avec le serveur, crée l'interface utilisateur et démarre la lecture des messages à partir du serveur.
 
-    messageField = new JTextField(40);
+4. Méthode `createAndShowGUI` :
+   ```java
+   public void createAndShowGUI() {
+       try {
+           UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+       } catch (Exception ex) {
+           ex.printStackTrace();
+       }
+       chatArea = new JTextArea(20, 40);
+       chatArea.setEditable(false);
+       messageField = new JTextField(40);
+       JButton sendButton = new JButton("Send");
+       ...
+   }
+   ```
 
-    JButton sendButton = new JButton("Envoyer");
-    sendButton.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            String message = messageField.getText();
-            sendMessage(message);
-            appendMessage("Vous", message, true);
-            messageField.setText("");
-        }
-    });
+   La méthode `createAndShowGUI` crée l'interface utilisateur Swing pour la fenêtre de chat. Elle configure l'apparence en utilisant le look and feel système, crée les composants tels que `JTextArea`, `JTextField` et `JButton`, et organise ces composants dans des panneaux pour obtenir la mise en page souhaitée. Enfin, elle crée et affiche la fenêtre de chat.
 
-    // Configurer la disposition des composants
-    JPanel chatPanel = new JPanel(new BorderLayout());
-    chatPanel.add(new JScrollPane(chatArea), BorderLayout.CENTER);
+5. Méthode `sendMessage` :
+   ```java
+   private void sendMessage(String message) {
+       writer.println(message);
+   }
+   ```
 
-    JPanel inputPanel = new JPanel(new BorderLayout());
-    inputPanel.add(messageField, BorderLayout.CENTER);
-    inputPanel.add(sendButton, BorderLayout.EAST);
+   La méthode `sendMessage` envoie un message au serveur en l'écrivant dans le flux de sortie du socket.
 
-    JPanel mainPanel = new JPanel(new BorderLayout());
-    mainPanel.add(chatPanel, BorderLayout.CENTER);
-    mainPanel.add(inputPanel, BorderLayout.SOUTH);
+6. Méthode `appendMessage` :
+   ```java
+   private void appendMessage(String message) {
+       SwingUtilities.invokeLater(() -> chatArea.append(message + "\n"));
+   }
+   ```
 
-    // Configurer la fenêtre
-    JFrame frame = new JFrame("Client de Chat");
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    frame.getContentPane().add(mainPanel);
-    frame.setSize(600, 400); // Définir la taille de la fenêtre à 600x400 pixels
-    frame.setLocationRelativeTo(null);
-    frame.setVisible(true);
-}
-```
+   La méthode `appendMessage` ajoute un message à la zone de chat en utilisant `SwingUtilities.invokeLater` pour garantir que l'opération est effectuée sur le thread de l'interface utilisateur.
 
-La méthode `createAndShowGUI` est responsable de la création et de l
+7. Méthode `performAuthentication` :
+   ```java
+   private void performAuthentication() throws IOException {
+       username
 
-'affichage de l'interface utilisateur graphique (GUI) du client. Elle utilise les composants Swing pour créer une fenêtre de chat basique.
+ = JOptionPane.showInputDialog(null, "Enter your username:");
+       writer.println(username);
+   }
+   ```
 
-Elle crée un `JTextArea` pour afficher les messages du chat, un `JTextField` pour permettre au client de saisir des messages, et un bouton "Envoyer" pour envoyer les messages saisis. Lorsque le bouton "Envoyer" est cliqué, il appelle la méthode `sendMessage` pour envoyer le message saisi au serveur et la méthode `appendMessage` pour afficher le message dans la zone de chat.
+   La méthode `performAuthentication` demande à l'utilisateur d'entrer son nom d'utilisateur en utilisant une boîte de dialogue Swing, puis envoie le nom d'utilisateur au serveur via le flux de sortie du socket.
 
-La méthode configure les différents panneaux (panels) pour organiser les composants de l'interface utilisateur graphique, crée une fenêtre `JFrame` et l'affiche à l'écran.
+8. Méthode `startReadingMessages` :
+   ```java
+   private void startReadingMessages() {
+       Thread readThread = new Thread(() -> {
+           try {
+               String message;
+               while ((message = reader.readLine()) != null) {
+                   appendMessage(message);
+               }
+           } catch (IOException e) {
+               e.printStackTrace();			
+           }
+       });
+       readThread.start();
+   }
+   ```
 
-```java
-private void sendMessage(String message) {
-    writer.println(message);
-}
+   La méthode `startReadingMessages` crée un nouveau thread qui lit en boucle les messages provenant du serveur via le flux d'entrée du socket. Chaque message lu est ajouté à la zone de chat en utilisant la méthode `appendMessage`.
 
-private void appendMessage(String sender, String message, boolean isLocalUser) {
-    String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
-    String formattedMessage = "[" + timestamp + "] " + sender + ": " + message;
+9. Méthode `main` :
+   ```java
+   public static void main(String[] args) {
+       String serverAddress = "localhost"; // Remplacez par l'adresse de votre serveur
+       int serverPort = 12345; // Remplacez par le port de votre serveur
+       SwingUtilities.invokeLater(() -> new ChatClient(serverAddress, serverPort));
+   }
+   ```
 
-    Color messageColor;
-    if (isLocalUser) {
-        messageColor = Color.BLUE; // Couleur pour les messages envoyés par le client local
-    } else {
-        messageColor = getUserColor(sender);
-    }
-
-    StyleContext styleContext = StyleContext.getDefaultStyleContext();
-    AttributeSet attributes = styleContext.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, messageColor);
-
-    int length = chatArea.getDocument().getLength();
-    chatArea.setCaretPosition(length);
-    chatArea.setCharacterAttributes(attributes, false);
-    chatArea.replaceSelection(formattedMessage + "\n");
-}
-```
-
-La méthode `sendMessage` envoie le message spécifié au serveur en utilisant le `PrintWriter`.
-
-La méthode `appendMessage` ajoute un nouveau message à la zone de chat avec des détails tels que l'expéditeur, le message et l'heure. Elle utilise un `LocalDateTime` pour obtenir l'heure actuelle, formate le message en conséquence, définit la couleur du message (bleu pour les messages du client local et une couleur générée aléatoirement pour les autres utilisateurs), et affiche le message formaté dans la zone de chat en utilisant `chatArea.replaceSelection`.
-
-```java
-private Color getUserColor(String username) {
-    if (userColors.containsKey(username)) {
-        return userColors.get(username);
-    } else {
-        Color color = generateRandomColor();
-        userColors.put(username, color);
-        return color;
-    }
-}
-
-private Color generateRandomColor() {
-    int r = (int) (Math.random() * 256);
-    int g = (int) (Math.random() * 256);
-    int b = (int) (Math.random() * 256);
-    return new Color(r, g, b);
-}
-```
-
-La méthode `getUserColor` retourne la couleur associée à un nom d'utilisateur spécifique. Si la couleur n'est pas encore définie pour cet utilisateur, elle génère une couleur aléatoire en utilisant `generateRandomColor`, l'associe à l'utilisateur dans la `Map` `userColors`, puis la retourne.
-
-La méthode `generateRandomColor` génère une couleur aléatoire en utilisant des valeurs de composantes RVB (rouge, vert, bleu) aléatoires.
-
-```java
-private void performAuthentication() throws IOException {
-    username = JOptionPane.showInputDialog(null, "Entrez votre nom d'utilisateur :");
-    writer.println(username);
-}
-```
-
-La méthode `perform
-
-Authentication` effectue l'authentification du client en demandant à l'utilisateur de saisir son nom d'utilisateur à l'aide d'une boîte de dialogue `JOptionPane`, puis envoie ce nom d'utilisateur au serveur en utilisant `writer.println`.
-
-```java
-private void startReadingMessages() {
-    Thread readThread = new Thread(() -> {
-        try {
-            String message;
-            while ((message = reader.readLine()) != null) {
-                String[] parts = message.split(": ", 2);
-                if (parts.length == 2) {
-                    String sender = parts[0];
-                    String actualMessage = parts[1];
-                    boolean isLocalUser = sender.equals(username);
-                    appendMessage(sender, actualMessage, isLocalUser);
-                    playNotificationSound();
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    });
-    readThread.start();
-}
-```
-
-La méthode `startReadingMessages` démarre un nouveau thread pour lire les messages du serveur en continu. Elle lit les messages ligne par ligne à partir du `BufferedReader` `reader`. Chaque message est analysé en utilisant `split` pour extraire l'expéditeur et le message réel. Ensuite, la méthode `appendMessage` est appelée pour afficher le message dans la zone de chat avec une indication si le message provient du client local ou d'un autre utilisateur. Enfin, la méthode `playNotificationSound` est appelée pour jouer un son de notification.
-
-```java
-private void playNotificationSound() {
-    // Implémentez la logique pour jouer un son de notification
-    // lorsqu'un nouveau message est reçu.
-    // Vous pouvez utiliser des bibliothèques telles que javax.sound ou JavaFX Media pour cela.
-}
-
-public static void main(String[] args) {
-    String serverAddress = "localhost"; // Remplacez par l'adresse de votre serveur
-    int serverPort = 12345; // Remplacez par le port de votre serveur
-
-    SwingUtilities.invokeLater(() -> new ChatClient(serverAddress, serverPort));
-}
-```
-
-La méthode `playNotificationSound` est un espace réservé pour implémenter la logique de lecture d'un son de notification lorsqu'un nouveau message est reçu. Vous pouvez utiliser des bibliothèques telles que `javax.sound` ou JavaFX Media pour cela.
-
-La méthode `main` est la méthode d'entrée du programme. Elle crée une instance de `ChatClient` en spécifiant l'adresse et le port du serveur, et le fait dans le thread de l'interface utilisateur en utilisant `SwingUtilities.invokeLater`.
-
+   La méthode `main` est la méthode principale qui est exécutée lorsque le programme est lancé. Elle crée une instance de `ChatClient` en utilisant l'adresse du serveur et le port spécifiés. L'exécution est effectuée sur le thread de l'interface utilisateur en utilisant `SwingUtilities.invokeLater`.
 # Threads :
+
+![image](https://github.com/zaka1200/chat_app/assets/121964432/ff0a8f78-c1a8-4288-977f-f418f331c2e9)
+
 
 Les threads jouent un rôle crucial dans ces deux codes. Dans le `ChatServer`, chaque connexion client est gérée par un thread `ClientHandler` distinct. Cela permet au serveur de gérer plusieurs connexions simultanément et de répondre aux messages de chaque client sans bloquer les autres clients. De même, dans le `ChatClient`, un thread distinct est utilisé pour lire les messages du serveur en continu tout en maintenant l'interface utilisateur réactive.
 
