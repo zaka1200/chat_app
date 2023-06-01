@@ -2,6 +2,12 @@
 
 ![image](https://github.com/zaka1200/chat_app/assets/121964432/8a259197-84ec-41a4-926d-442913aa5da8)
 
+#  table des matières:
+
+- [Introduction](#introduction)
+- [Serveur](#serveur)
+- [Client](#client)
+- [Conclusion](#conclusion)
 
 # Introduction :
 
